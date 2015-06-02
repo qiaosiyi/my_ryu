@@ -19,7 +19,7 @@
 ##   Run l22.py by type "sudo ryu-manager l22.py"
 ##   And this App can passer out the  ipv4_src/dst infomation from a ipv4 packetin message
 ##   I want to use the ipv4_dst to route this ipv4 flow in a small SDN network
-##   my emai: qsy2011815@gmail.com
+##   my email: qsy2011815@gmail.com
 ####################################################################################################
 
 
