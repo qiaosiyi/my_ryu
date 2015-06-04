@@ -1,8 +1,9 @@
 
 
-def dijkstra(graph,n,k,e):
+def dijkstra(graph,k,e):
 	k=k-1
 	e=e-1
+	n=len(graph[0])
 	dis=[0]*n  # len(dis) = n
 	flag=[False]*n
 	pre=[k]*n
@@ -80,7 +81,7 @@ def dijkstra(graph,n,k,e):
 if __name__=='__main__':
 	
 	k=6
-	e=7
+	e=1
 	graph=[
 			[0,1,1 ,99,99,99,99],
 			[1,0,99,1,1,99,99],
@@ -90,8 +91,8 @@ if __name__=='__main__':
 			[99,99,99,99,1,0,1],
 			[99,99,99,99,1,1,0]
 			]
-	n=7
+	
 	if 0<k<8 and 0<e<8:
-		listpro=dijkstra(graph,n,k,e)
+		listpro=dijkstra(graph,k,e)
 
 	print(listpro)
