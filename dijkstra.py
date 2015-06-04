@@ -1,58 +1,61 @@
 
 
-def dijkstra(graph,n):
+def dijkstra(graph,n,k,e):
+	k=k-1
+	e=e-1
 	dis=[0]*n  # len(dis) = n
 	flag=[False]*n
-	pre=[0]*n
+	pre=[k]*n
 	flag[0]=True
-	start=0
-	k=0
+	
+	start=k
+
 	listpro=[]
 	for i in range(n):
 		listpro.append([i])#from point k likely
-	print listpro
+	# print listpro
 
 	print
-	print "=========================================================================="
-	print "\tdis[",k,"]=",
+	print "====",k+1,"->",e+1,"==============================================================="
+	# print "\tdis[",k,"]=",
 	for i in range(n):#   0->(n-1)
 		dis[i]=graph[k][i]
-		print dis[i],
-	print
-	print
+		# print dis[i],
+	# print
+	# print
 
 	for j in range(n-1):
 		mini=99
 
-		print "j=",j,":mini=99:"
+		# print "j=",j,":mini=99:"
 
 		for i in range(n):
-			print "\ti=",i,":","dis[i]=",dis[i],"mini=",mini,"flag[i]=",flag[i]
+			# print "\ti=",i,":","dis[i]=",dis[i],"mini=",mini,"flag[i]=",flag[i]
 
 			if dis[i]<mini and not flag[i]:
-				print "\t\tdis[",i,"]<mini and not flag[",i,"]"
+				# print "\t\tdis[",i,"]<mini and not flag[",i,"]"
 				mini=dis[i]
-				print "\t\tmini=dis[",i,"]=",dis[i],"dis=",dis
-				print "\t\tpre=",pre
+				# print "\t\tmini=dis[",i,"]=",dis[i],"dis=",dis
+				# print "\t\tpre=",pre
 				k=i
-				print "\t\tk=",i
+				# print "\t\tk=",i
 				# listpro[i].append(i)
 
 		if k==0:#
-			print "\tk==0 return"
+			# print "\tk==0 return"
 			return
 		flag[k]=True
-		print
-		print "\tflag[",k,"]=True"
+		# print
+		# print "\tflag[",k,"]=True"
 		for i in range(n):
-			print "\ti=",i,"dis[i]=",dis[i],"dis[k]=",dis[k],"graph[k][i]=",graph[k][i]
+			# print "\ti=",i,"dis[i]=",dis[i],"dis[k]=",dis[k],"graph[k][i]=",graph[k][i]
 			if dis[i]>dis[k]+graph[k][i]:
-				print "\t\tdis[",i,"]>dis[",k,"]+graph[",k,"][",i,"]"
+				# print "\t\tdis[",i,"]>dis[",k,"]+graph[",k,"][",i,"]"
 				dis[i]=dis[k]+graph[k][i]
-				print "\t\tdis[",i,"]=",dis[i],dis
+				# print "\t\tdis[",i,"]=",dis[i],dis
 				pre[i]=k
-				print "\t\tpre[",i,"]=",k,pre
-				print
+				# print "\t\tpre[",i,"]=",k,pre
+				# print
 				#del listpro[i][len(listpro[i])-1]
 				# if pre[k] != 0:
 				# 	listpro[i].append(k)
@@ -62,17 +65,22 @@ def dijkstra(graph,n):
 		listpro[i].append(pre[i])
 
 	for i in range(n):
-		
 		for j in range(n):
-			if listpro[j][-1] != 0:
+			if listpro[j][-1] != start:
 				listpro[j].append(listpro[listpro[j][-1]][1])
-
-
-
-	return dis,pre,listpro
-
+	
+	for i in range(n):
+		listpro[i].reverse()
+	
+	# print dis
+	# print pre
+	for i in range(len(listpro[e])):
+		listpro[e][i]=listpro[e][i] + 1
+	return listpro[e]
 if __name__=='__main__':
-	n=7
+	
+	k=6
+	e=7
 	graph=[
 			[0,1,1 ,99,99,99,99],
 			[1,0,99,1,1,99,99],
@@ -82,7 +90,8 @@ if __name__=='__main__':
 			[99,99,99,99,1,0,1],
 			[99,99,99,99,1,1,0]
 			]
-	dis,pre,listpro=dijkstra(graph,n)
-	print(dis)
-	print(pre)
+	n=7
+	if 0<k<8 and 0<e<8:
+		listpro=dijkstra(graph,n,k,e)
+
 	print(listpro)
