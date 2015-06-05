@@ -29,7 +29,7 @@ import time
 class L22(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
        
-    linkports={(1,2):(3),(2,1):(3),
+    linkports={(1,2):(3),(2,1):(3),#实验用topo图，还没有实现与自发现拓扑结合
                (1,3):(2),(3,1):(2),
                (3,4):(1),(4,3):(3),
                (2,4):(1),(4,2):(2),
@@ -40,25 +40,25 @@ class L22(app_manager.RyuApp):
                (5,7):(2),(7,5):(3)
     }
 
-    hostports={'10.0.0.1':[1,1],'10.0.0.2':[7,1]}
+    hostports={'10.0.0.1':[1,1],'10.0.0.2':[7,1]}#主机与交换机连接拓扑，'主机ip':[dpid，交换机接口]
     
-    dpid_datapath={(1):[]}
+    dpid_datapath={(1):[]}                       #保存拓扑里datapath对象
 
     conter = 0
-    conterflow = [0]*7
+    conterflow = [0]*7  #保存每个交换机上由控制器添加或删除的表象总数
     unknown_dst = []
     
     def __init__(self, *args, **kwargs):
         super(L22, self).__init__(*args, **kwargs)
         #self.mac_to_port = {}
 
-    def addWord(self,theIndex,word,pagenumber): 
+    def addWord(self,theIndex,word,pagenumber):     #给字典内添加对象
         theIndex.setdefault(word, [ ]).append(pagenumber)
 
 
 
-    def dijkstra(self,k,e):
-        k=k-1
+    def dijkstra(self,k,e):                        #选路算法，k是起点，e是终点，数值从1开始
+        k=k-1                                       #返回 [k,***,e]路径
         e=e-1
         
         graph=[
@@ -111,10 +111,8 @@ class L22(app_manager.RyuApp):
         datapath = ev.msg.datapath
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
-        print datapath,datapath.id#,self.dpid_datapath[(datapath.id)]
-        # if len(self.dpid_datapath[datapath.id]) == 0:
         self.addWord(self.dpid_datapath,datapath.id,datapath)
-        # self.addWord(self.dpid_datapath,datapath.id,datapath)
+        # 获取拓扑里交换机的datapath对象
         # install table-miss flow entry
         #
         # We specify NO BUFFER to max_len of the output action due to
@@ -151,7 +149,6 @@ class L22(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPacketIn,MAIN_DISPATCHER)
     def packet_in_handler(self,ev):
-        
 
         msg = ev.msg
         datapath = msg.datapath
@@ -163,20 +160,13 @@ class L22(app_manager.RyuApp):
         dpid = datapath.id
         print "No.",self.conter,"========","dpid=",dpid,"==========================",time.ctime()
         print self.conterflow
-        #print pkt.get_protocols(ipv4.ipv4)
-        if len(pkt.get_protocols(ipv4.ipv4)) != 0:
+        if len(pkt.get_protocols(ipv4.ipv4)) != 0:#判断是ipv4数据包，则进行路由，本路由是基于ip的路由
 
-            # print "packetin.ipv4.src:",pkt.get_protocols(ipv4.ipv4)[0].src
-            # print "packetin.ipv4.dst:",pkt.get_protocols(ipv4.ipv4)[0].dst
             ipv4_hdr = pkt.get_protocols(ipv4.ipv4)[0]
-            unknown_dst=pkt.get_protocols(ipv4.ipv4)[0].dst#'10.0.0.2'
-            switch_dst,switch_port_dst=self.hostports[unknown_dst]
-            switch_src = dpid
-            print "switch_src=",switch_src,"switch_dst=",switch_dst
-            route=self.dijkstra(switch_src,switch_dst)
-            print route#[1,2,5,7]
-
-       
+            unknown_dst=pkt.get_protocols(ipv4.ipv4)[0].dst#'10.0.0.2'得到未知目的ip
+            switch_dst,switch_port_dst=self.hostports[unknown_dst]#在hostports内查找终点交换机dpid
+            switch_src = dpid                                   #起点交换机的dpid是packetin消息的dpid
+            route=self.dijkstra(switch_src,switch_dst)          #得到路由过程list[k,*...*,e]
 
             for i in range(len(route)-1):
                 outport = self.linkports[(route[i],route[i+1])]
@@ -185,46 +175,20 @@ class L22(app_manager.RyuApp):
                 match = parser.OFPMatch(ipv4_dst=unknown_dst,eth_type=0x0800)
                 datapath_obj = self.dpid_datapath[(route[i])][0]
                 print "datapath_obj=",self.dpid_datapath[(route[i])][0]
-                self.add_flow(datapath_obj,16, match, actions)
+                self.add_flow(datapath_obj,16, match, actions)#下发流表项
 
             swdst,swportdst = self.hostports[unknown_dst]
             outport = swportdst
             actions = [parser.OFPActionOutput(outport)]
             match = parser.OFPMatch(ipv4_dst=unknown_dst,eth_type=0x0800)
             datapath_obj = self.dpid_datapath[(swdst)][0]
-            self.add_flow(datapath_obj,16, match, actions)
-            print swdst,swportdst
-            # print
-            #for i in range(len())
-
-
-            # outport=[]
-            # for i in range(len(route)-1):
-            #     outport.append(self.linkports[(route[i],route[i+1])])
-            # print outport
-            # outport.append(switch_port_dst)
-            # print outport
-
-
-            # if dpid !=
-            #     outport = self.linkports[(route[i],route[i+1])]
-
-
-            # actions = [parser.OFPActionOutput(2)]
-            # match = parser.OFPMatch(ipv4_dst='10.0.0.2',eth_type=0x0800)
-            # self.add_flow(datapath, 16, match, actions)
-            # src = ipv4_hdr.src
-            
-
+            self.add_flow(datapath_obj,16, match, actions)#下发最后一台交换机的流表项，因为最后一台交换机是接入层交换机，
+            print swdst,swportdst                           #需要另外查询“mac表”（ip-port表）才能得到表项内容
         else :
             if len(pkt.get_protocols(ethernet.ethernet)) != 0:
                 print "proto packet"
                 # print "packetin.eth.src:",pkt.get_protocols(ethernet.ethernet)[0].src
                 # print "packetin.eth.dst:",pkt.get_protocols(ethernet.ethernet)[0].dst
-
-        # if len(pkt.get_protocols(ipv6.ipv6)) != 0:
-        #     print "packetin.ipv6.src:",pkt.get_protocols(ipv6.ipv6)[0].src
-        #     print "packetin.ipv6.dst:",pkt.get_protocols(ipv6.ipv6)[0].dst
 
         # actions = [parser.OFPActionOutput(ofproto.OFPP_FLOOD)]
         # out = parser.OFPPacketOut(
@@ -232,15 +196,5 @@ class L22(app_manager.RyuApp):
         #     actions=actions)
         
 
-        # datapath.send_msg(out)
+        # datapath.send_msg(out)#还没有将packetin包再下发的功能，这样会丢掉第一个包
 
-
-
-        # if unknown_dst == '10.0.0.2':
-
-        #     actions = [parser.OFPActionOutput(2)]
-        #     match = parser.OFPMatch(ipv4_dst=unknown_dst)
-        #     self.add_flow(datapath, 0, match, actions)
-
-        # print "dpid:",dpid,"in_port:",in_port,"src:",src,"dst:",unknown_dst
-            # pass
