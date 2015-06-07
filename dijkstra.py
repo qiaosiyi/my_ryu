@@ -7,7 +7,7 @@ def dijkstra(graph,k,e):
 	dis=[0]*n  # len(dis) = n
 	flag=[False]*n
 	pre=[k]*n
-	flag[0]=True
+	flag[k]=True
 	
 	start=k
 
@@ -42,9 +42,9 @@ def dijkstra(graph,k,e):
 				# print "\t\tk=",i
 				# listpro[i].append(i)
 
-		if k==0:#
+	#	if k==start:#
 			# print "\tk==0 return"
-			return
+	#		return
 		flag[k]=True
 		# print
 		# print "\tflag[",k,"]=True"
