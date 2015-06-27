@@ -53,7 +53,7 @@ amming at ryu route
 4.使用tcpreplay -i eth xx.pcap发包测试
 
   
-一.	建立传统最短路由实验环境
+一.建立传统最短路由实验环境
 1.开启Ryu控制器（3.15），其支持OpenFlow1.3协议。
 	Ryu控制器安装在Ubuntu12.04（64）中。
 		# cd /usr/local/lib/python2.7/dist-packages/ryu/app
@@ -63,7 +63,7 @@ amming at ryu route
 2.建立SDN交换机实验环境，使用mininet。
 	Mininet软件（2.2.0）安装在Ubuntu12.04（64）中。
 		打开另一个终端。
-# cd /usr/qsy/mininet
+		# cd /usr/qsy/mininet
 		# mn –custom ./route_topo.py –topo routetopo –controller=remote,ip=127.0.0.1,port=6633 –switch=user
 		其中route_topo.py文件放在mininet目录下。route_topo.py文件在附录中给出。
 	建立了拓扑并建立了H10 H11 H13 H14 它们分别连接在dpid=3、4、6、7的交换机上。H10的ip是10.0.0.6；h11的ip是10.0.0.4；h13的ip是10.0.0.6；h14的ip是10.0.0.7；本实验的路由均根据目的ip进行计算。
