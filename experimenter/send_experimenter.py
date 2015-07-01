@@ -11,7 +11,7 @@ from ryu.lib.packet import udp
 from ryu.lib.packet import ipv4
 from ryu.ofproto.ofproto_v1_3_parser import OFPExperimenter
 import time
-
+#缩进有时候是tab 有时候是空格，容易导致未知错误
 # class experimenter(app_manager.RyuApp):
 #     _CONTEXTS = {
 #         'dpset': dpset.DPSet,
