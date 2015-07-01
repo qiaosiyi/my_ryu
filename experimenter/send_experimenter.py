@@ -45,7 +45,7 @@ class experimenter(app_manager.RyuApp):
 		self.swcount = 0
 		
 		for i in self.dpset.get_all():
-			self.swcount = self.swcount + 1
+			self.swcount = self.swcount + 1#获取网络中交换机的个数
 		
 		if self.swcount == 1:
 			print "There is",self.swcount,"switche in the network"
@@ -54,7 +54,7 @@ class experimenter(app_manager.RyuApp):
 		else:
 			print "There is no switches in the network"
 
-		print "dpid(1)=",self.dpset.get(1)
+		print "dpid(1)=",self.dpset.get(1)#用这个函数可以得到dpid交换机对应的datapath
 
 		print "And then...?",
 
