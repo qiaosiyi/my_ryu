@@ -8,13 +8,13 @@ amming at ryu route
   安装各种依赖包:
       #apt-get install cmake libpcap-dev libxerces-c2-dev libpcre3-dev flex bison pkg-config autoconf libtool libboost-dev g++ scons wireshark libglib2.0-dev wireshark-dev python-eventlet python-routes python-webob python-paramiko python-dev python-lxml python-pip libxml2-dev libxslt1-dev python-dev python-mysqldb vim ssh
       
-  安装git:
+  安装git：
       #apt-get install git
       #git init
       #apt-get install upgrade git
       #git init
 
-  下载mininet:
+  下载mininet：
       #git clone git://github.com/mininet/mininet
       #mininet/util/install.sh -a
       
