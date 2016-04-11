@@ -22,7 +22,16 @@ amming at ryu route
   
       #git clone git://github.com/mininet/mininet
       
-      #mininet/util/install.sh -a
+      #cd mininet
+      
+      git tag #注释 list available versions
+      
+      git checkout -b 2.2.0 2.2.0 #注释 or whatever version you wish to install  
+                                  #We have to chose 2.2.0 to implement our lab.                  
+      
+      cd ..
+      
+      #mininet/util/install.sh -nfv
       
   下载cpqd：
   
@@ -39,11 +48,17 @@ amming at ryu route
       #cp ../bin/libn*.so /usr/local/lib
 
       #sudo ldconfig
+      
       #cp -r ../include/* /usr/include/
+      
       #cd ofsoftswitch13/
+      
       #./boot.sh
+      
       #./configure
+      
       #make
+      
       #make install
 
   下载ryu：
