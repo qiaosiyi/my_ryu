@@ -38,6 +38,8 @@ amming at ryu route
   
       #git clone https://github.com/CPqD/ofsoftswitch13.git
       
+      下载netbee---http://www.nbee.org/download/nbeesrc-jan-10-2013.php
+      
       #unzip nbeesrc-jan-10-2013.zip
       
       #cd src/
